@@ -35,7 +35,7 @@ class GameScreen(Dialog):
                 ))
 
 	def humanvscpu(self, trigger, event):
-		player1 = StrategicMinMax(self.surface, self.images, self.locations, 2)
+		player1 = StrategicMinMax(self.surface, self.images, self.locations, 4)
 		player2 = Human(self.surface, self.images, self.locations, 2)
 		
 		game = Game(self.surface, self.images, self.locations, player1, player2)
@@ -55,7 +55,7 @@ class GameScreen(Dialog):
 		return widget.DONE
 
 	def loadPlayer(self, name):
-                difficulty = 2 #int(self.settings.getGlobal()['game'][name+'_level'])
+                difficulty = 4 #int(self.settings.getGlobal()['game'][name+'_level'])
 
                 if self.settings.getGlobal()['game'][name+'_type'] == 'human':
 	                player = Human(self.screen, self.images, self.settings, difficulty)

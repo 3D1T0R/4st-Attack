@@ -104,9 +104,11 @@ class Game:
 
         	        if rules.isWinner(board, 1):
 				player2.gameOver(move)
+				player1.gameOver(move)
 				return self.winner(1)
 			elif rules.isBoardFull(board):
 				player2.gameOver(move)
+				player1.gameOver(move)
 				return self.winner(0)
 
 			while 1:
@@ -132,7 +134,9 @@ class Game:
 
 			if rules.isWinner(board, 2):
 				player1.gameOver(move)
+				player2.gameOver(move)
 				return self.winner(2)
 			elif rules.isBoardFull(board):
 				player1.gameOver(move)
+				player2.gameOver(move)
 				return self.winner(0)

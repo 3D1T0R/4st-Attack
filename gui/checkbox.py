@@ -1,5 +1,5 @@
 ###############################################################################################
-# $Id: checkbox.py,v 1.1.1.1 2002/02/19 10:15:59 slmm Exp $
+# $Id: checkbox.py,v 1.2 2002/05/21 20:49:51 slmm Exp $
 ###############################################################################################
 
 from widget import Widget
@@ -85,7 +85,6 @@ class CheckBox(Widget):
 			), (0,0)
 		)
 	
-	destination.blit ( self.original_background, (self.position [0], self.position [1] ) )
 
 	
         # are we dirty or not?
@@ -93,7 +92,9 @@ class CheckBox(Widget):
             # not dirty, nothing to do here
             return 0
 
-        # what surface should we use?
+	destination.blit ( self.original_background, (self.position [0], self.position [1] ) )
+        
+	# what surface should we use?
         if self.state:
             usedsurface = self.checked
         else:

@@ -25,11 +25,16 @@ class Node:
 
 # This class tries to add some strategic value to the min max algorithme
 class StrategicMinMax(MinMax):
+	def __init__(self, screen, images, settings, difficulty):
+		self.scoremap = ScoreMap()
+		self.scoremap.randomizeMap()
+		MinMax.__init__(self, screen, images, settings, difficulty)
 
 	def score(self, node, player, opponent):
 		current_score    = 0
 
-		scoremap = ScoreMap()
+		scoremap = self.scoremap
+		
 		number_of_stones = 0
 		
 		for x in range(7):

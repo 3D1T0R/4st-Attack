@@ -63,7 +63,7 @@ class MinMax(Player):
 
 	def statespace(self, node, depth, current_player, player, opponent):
 		if rules.isWinner(node.board, opponent):
-			print "a lose up ahead"
+			#print "a lose up ahead"
                         node.value = -10000 + depth
                         return node
                 elif rules.isWinner(node.board, player):
@@ -100,9 +100,9 @@ class MinMax(Player):
 
 		bestscore = -100000 
 		best_moves = []
-		print "New Round"
+		#print "New Round"
 		for child in node.childs:
-			print "Child value=", child.value, "move=", child.board.last_move
+			#print "Child value=", child.value, "move=", child.board.last_move
 			if child.value >= bestscore:
 				#if rules.isMoveLegal(board, child.board.last_move):
 				if bestscore == child.value:
