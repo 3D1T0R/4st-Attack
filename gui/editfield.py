@@ -235,6 +235,7 @@ class EditField(Widget):
 
             # we're dirty now
             self.dirty = 1
+	    return
 
     def createBorder (self):
         """Creates the border for the widget. Uses the 8 static icons and creates a surface that is

@@ -4,7 +4,7 @@
 # Created by:                                                           #
 # Developer            - "slm" - Jeroen Vloothuis                       #
 # Graphics             - "Korruptor" - Gareth Noyce                     #
-# Music                - "Korruptor" - http://www.korruptor.demon.co.uk #
+# Music                - "theGREENzebra"                                #
 #########################################################################
 # Specail thanks:                                                       #
 # chakie(Jan Elkholm)    - letting me "embrace and extend" his gui lib  #
