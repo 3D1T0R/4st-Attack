@@ -1,4 +1,4 @@
-import gui
+#import gui
 import pygame
 from quit import *
 from game import *
