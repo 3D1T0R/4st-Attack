@@ -1,4 +1,4 @@
-#import gui
+import gui
 import pygame
 from quit import *
 from game import *
@@ -68,7 +68,7 @@ class SettingsScreen(Dialog):
 		
 		if not (self.ini_settings.settings['sound']['music'] == 'yes'):
 			self.ini_settings.settings['sound']['music'] = 'yes'
-			pygame.mixer.music.load( os.path.join(self.ini_settings.settings['path']['data'], 'music', 'definition.xm') )
+			pygame.mixer.music.load( os.path.join(self.ini_settings.settings['path']['data'], 'music', '4stattack.ogg') )
 			pygame.mixer.music.play(-1)
 		else:
 			self.ini_settings.settings['sound']['music'] = 'no'
