@@ -84,7 +84,7 @@ class EditField(Widget):
         return self.text
 
 
-    
+
     def paint (self, destination, force=0):
         """Method that paints the editfield. This method will simply blit out the surface of the widget
         onto the destination surface. """
@@ -133,82 +133,108 @@ class EditField(Widget):
 
 
     def keyDown (self,  event):
-        """Callback triggered when the user presses a key inside the editfield. Gets the pressed key
+ 	"""Callback triggered when the user presses a key inside the editfield. Gets the pressed key
         and modifies the internal string if needed. Renders a new surface too if needed. Some
         special keys are ignored."""
 
         # get the key and the unicode string
-        key   = event.key
-        value = event.unicode
+        key = event.key
+
+        # Weird fix. This is required on RedHat pygame 1.5.3??
+        ev_unicode = event.unicode
+        if type(ev_unicode) == unicode or type(ev_unicode) == str:
+            if ev_unicode == '':
+                ev_unicode = 0
+            else:
+                ev_unicode = ord(ev_unicode)
+
+        value = unichr(ev_unicode).encode('latin1')
 
         # a special key?
         if key == K_BACKSPACE:
-	    if not len(self.text): return
             # remove one character
-            self.text = self.text [0:self.cursor - 1] + self.text[self.cursor:]
+            self.text = self.text [0:self.cursor - 1]
 
             # update cursor position
             self.cursor -= 1
+            if self.cursor < 0:
+                self.cursor = 0
 
-	    text = self.text
-            # set the new surface
-	    if len(self.text) == 0: text = ' '
+            # what text should we render?
+            if len(self.text) == 0:
+                # no text, so use something empty
+                text = ' '
+            else:
+                # we have text, use it
+                text = self.text
+
+            # render the new surface
             self.textrendered = self.font.render ( text, 1, self.color )
 
             # we're dirty now
             self.dirty = 1
             return
 
-        elif key == K_DELETE:
+        if key == K_DELETE:
             # remove one character from the right
             self.text = self.text [0:self.cursor] + self.text[self.cursor + 1:]
-	    text = self.text
-            # set the new surface
-	    if len(self.text) == 0: text = ' '
-            self.textrendered = self.font.render ( text, 1, self.color )
-	    # we're dirty now
-            self.dirty = 1
-	    return
 
-        elif key == K_TAB or key == K_RETURN:
-            # dont do jack
+            # what text should we render?
+            if len(self.text) == 0:
+                # no text, so use something empty
+                text = ' '
+            else:
+                # we have text, use it
+                text = self.text
+
+            # render the new surface
+            self.textrendered = self.font.render ( text, 1, self.color )
+
+            # we're dirty now
+            self.dirty = 1
+            return
+
+        if key == K_TAB or key == K_RETURN:
+            # remove one character from the right
             print "editfield.keyDown(): tab/return not handled"
             return
 
-	# arrow handling
-	elif key ==  K_LEFT:
-	    self.cursor -= 1 
-	    if self.cursor < 0: self.cursor = 0
-	
-	elif key ==  K_RIGHT:
-	    self.cursor += 1
-	    if self.cursor > len(self.text): self.cursor = len(self.text)
-	    
-	elif key == K_HOME:
-	    self.cursor = 0
-	
-	elif key == K_END:
-	    self.cursor = len(self.text)
+        # arrow handling
+        elif key == K_LEFT:
+            self.cursor -= 1
+            if self.cursor < 0:
+                self.cursor = 0
 
-	else:
-	        # merge in the text
-        	text = self.text [0:self.cursor] + value + self.text[self.cursor:]
-		if self.font.render( text+" ", 1, self.color ).get_width() > self.width : return
-        	self.text = text
-	        # update cursor position
-        	self.cursor += 1
+        elif key ==  K_RIGHT:
+            self.cursor += 1
+            if self.cursor > len(self.text):
+                self.cursor = len(self.text)
 
-        # do we still have any text left?
-        if self.text == "":
-            self.textrendered = None
+        elif key == K_HOME:
+            # move to the first position
             self.cursor = 0
-        else:
-            # set the new surface
-            self.textrendered = self.font.render ( self.text, 1, self.color )
 
-        # we're dirty now
-        self.dirty = 1
+        elif key == K_END:
+            # move the the last position
+            self.cursor = len(self.text)
 
+        elif ev_unicode != 0:
+            # a normal key pressed, merge in the text
+            self.text = self.text [0:self.cursor] + value + self.text[self.cursor:]
+
+            # update cursor position
+            self.cursor += 1
+
+            # do we still have any text left?
+            if self.text == "":
+                self.textrendered = None
+                self.cursor = 0
+            else:
+                # set the new surface
+                self.textrendered = self.font.render ( self.text, 1, self.color )
+
+            # we're dirty now
+            self.dirty = 1
 
     def createBorder (self):
         """Creates the border for the widget. Uses the 8 static icons and creates a surface that is
@@ -217,7 +243,7 @@ class EditField(Widget):
         # get the delta values. These are used so that we know where to paint the text surface
         self.deltax = EditField.frameicons ['left'].get_width()
         self.deltay = EditField.frameicons ['top'].get_height()
-        
+
         # get height and width of new surface
         size   = self.textsurface.get_size ()
         width  = size[0] + self.deltax + EditField.frameicons ['right'].get_width()
@@ -253,7 +279,7 @@ class EditField(Widget):
             self.surface.blit ( top, ( x, 0))
             self.surface.blit ( bot, ( x, height - bot.get_height () + 1 ) )
             x += widthx
-        
+
         # left/right borders
         y = 0
         while y < height:
