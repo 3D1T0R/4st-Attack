@@ -1,0 +1,15 @@
+#########################################################################
+#                            4st Attack                                 #
+#########################################################################
+# Created by:                                                           #
+# Main programming     - "slm" - Jeroen Vloothuis                       #
+#                      - Tjerk Nan                                      #
+# Graphics             - "The Corruptor" -- g@spank-the-monkey.org.uk   #
+# Music                - Tjerk Nan                                      #
+#########################################################################
+# Specail thanks:                                                       #
+# "CrashChaos" - Frank Raiser           for letting us nick his gui lib #
+# Everyone in #pygame and the opensource community in general           #
+#########################################################################
+# This software is licensed under the GPL - General Public License      #
+#########################################################################
