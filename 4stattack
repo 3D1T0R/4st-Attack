@@ -1,0 +1,10 @@
+#!/bin/sh
+FAHOME=/usr/share/forcedattack2
+if [ ! -f $HOME/.4stattackrc ]; then
+	cp $FAHOME/settings.ini $HOME/.4stattackrc
+fi
+if [ -x $FAHOME/4stattack.py ]; then
+	$FAHOME/4stattack.py -ini $HOME/.4stattackrc
+
+fi
+

@@ -7,20 +7,22 @@
 
 themename=$1
 
-cd data/graphics/$themename/1024x768
+cd data/themes/$themename/1024x768
 
 mkdir ../800x600
 mkdir ../640x480
 
-for i in $( ls *.png); 
+for i in $( ls *.png);
 do
 	source=$i
 	echo $i
 
 	convert $i -scale 78.125% ../800x600/$i
 	convert $i -scale 62.5% ../640x480/$i
-	
 done
-										         
 
-										    
+cp locations.ini ../800x600
+cp locations.ini ../640x480
+
+python ../../../../themeresizer.py -ini ../800x600/locations.ini -size 0.78125
+python ../../../../themeresizer.py -ini ../640x480/locations.ini -size 0.625

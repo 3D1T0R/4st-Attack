@@ -21,22 +21,33 @@ class Node:
 			for child in self.childs:
 				number=number+1
 			return "Has %s child(s)" % number
-		return "STATE"	
+		return "STATE"
 
 # This class tries to add some strategic value to the min max algorithme
 class StrategicMinMax(MinMax):
 	def __init__(self, screen, images, settings, difficulty):
 		self.scoremap = ScoreMap()
-		self.scoremap.randomizeMap()
+		#self.scoremap.randomizeMap()
 		MinMax.__init__(self, screen, images, settings, difficulty)
 
 	def score(self, node, player, opponent):
 		current_score    = 0
 
-		scoremap = self.scoremap
-		
+		scoremap = ScoreMap()
+
+		for y in range( len(node.board.state[3]) ):
+			if node.board.state[3][y] == opponent and y != 0:
+				for x in range(7):
+					scoremap.setStoneScore(x,y, scoremap.getStoneScore(x, y)+8)
+
+			if node.board.state[3][0] == opponent:
+				if ((len(node.board.state[2]) and node.board.state[2][0]==player) and (len(node.board.state[4]) and node.board.state[4][0]==opponent)):
+					scoremap.setStoneScore(2,0, 80)
+				if ((len(node.board.state[4]) and node.board.state[4][0]==player) and (len(node.board.state[2]) and node.board.state[2][0]==opponent)):
+					scoremap.setStoneScore(4,0, 80)
+
 		number_of_stones = 0
-		
+
 		for x in range(7):
 			for y in range(len(node.board.state[x])):
 				if node.board.state[x][y] == player:

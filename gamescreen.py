@@ -35,7 +35,7 @@ class GameScreen(Dialog):
                 ))
 
 	def humanvscpu(self, trigger, event):
-		player1 = StrategicMinMax(self.surface, self.images, self.locations, 4)
+		player1 = StrategicMinMax(self.surface, self.images, self.locations, 2)
 		player2 = Human(self.surface, self.images, self.locations, 2)
 		
 		game = Game(self.surface, self.images, self.locations, player1, player2)

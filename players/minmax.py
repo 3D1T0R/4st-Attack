@@ -1,3 +1,9 @@
+try:
+	import psyco
+except ImportError:
+	print "Not using psyco (psyco.sf.net), AI not a maximum speed!"
+
+
 import rules
 from player import *
 from random import *
@@ -8,7 +14,7 @@ class Node:
 	def __init__(self, board, move, player):
 		self.board = board
 		#self.parent = parent
-		self.value = 0 
+		self.value = 0
 		self.childs = []
 		self.move = move
 		self.player = player
@@ -19,7 +25,7 @@ class Node:
 			for child in self.childs:
 				number=number+1
 			return "Has %s child(s)" % number
-		return "STATE"	
+		return "STATE"
 
 class MinMax(Player):
 	type = 'AI'
@@ -39,14 +45,14 @@ class MinMax(Player):
 				node.value = min(list)
 			else:
 				node.value = max(list)
-	
+
                 else:
 			node.value = self.score(node, player, opponent)  / (depth + 1)
 
 	def score(self, node, player, opponent):
 		return int(random() * 100) - 50
-	
-	
+
+
 	def makeBoard(self, move, board, player):
 		temp_board = copy.deepcopy(board)
 		temp_board.move(move, player)
@@ -54,7 +60,7 @@ class MinMax(Player):
 
 	def listMoves(self, board, player):
 		checkmove = rules.isMoveLegal
-		
+
 		options = []
 		for move in range(7):
                         if checkmove(board, move):
@@ -67,9 +73,9 @@ class MinMax(Player):
                         node.value = -10000 + depth
                         return node
                 elif rules.isWinner(node.board, player):
-			node.value = 10000 - depth 
+			node.value = 10000 - depth
                         return node
-		
+
 		elif self.listMoves(node.board, 0) < 1:
 			self.evaluate(node, player, opponent, depth)
 			return node
@@ -80,25 +86,25 @@ class MinMax(Player):
 				next_player = 2
 			for move in self.listMoves(node.board, current_player):
 				node.board.move(move, current_player)
-				
+
 				node.childs.append(self.statespace(Node( node.board, move, player), depth+1, next_player, player, opponent))
 				node.board.undomove(move)
-				
+
 		self.evaluate(node, player, opponent, depth)
 		return node
-		
+
 
 	def doMove(self, current_board, player, event):
 		board = copy.deepcopy(current_board)
 
 		if player == 1: opponent = 2
 		else: opponent = 1
-		
+
 		node = Node(board, 0, player)
-			
+
 		node =  self.statespace( node, 0, player, player, opponent);
 
-		bestscore = -100000 
+		bestscore = -100000
 		best_moves = []
 		#print "New Round"
 		for child in node.childs:
@@ -116,3 +122,8 @@ class MinMax(Player):
 
 	def gameOver(self, move):
 		return None
+try:
+	psyco.bind(MinMax)
+	psyco.bind(Node)
+except:
+	pass

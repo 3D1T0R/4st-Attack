@@ -31,7 +31,7 @@ screen	= None
 
 def playMusic(datadir):
 	if pygame.mixer.get_init():
-		pygame.mixer.music.load( os.path.join(datadir, 'music', 'definition.xm') )
+		pygame.mixer.music.load( os.path.join(datadir, 'music', '4stattack.ogg') )
 		pygame.mixer.music.play(-1)
 
 def getOptions(argv):
