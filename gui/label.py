@@ -1,112 +1,65 @@
-import pygame,pygame.draw
+###############################################################################################
+# $Id: label.py,v 1.3 2002/02/26 15:35:56 slmm Exp $
+###############################################################################################
 
-import string
+import pygame
+from pygame.locals import *
+from widget import Widget
+import widget
 
-from object import Object
-
-class Label(Object):
+class Label(Widget):
     """
-    General GUI label class
+    This class defines a simple label with a text rendered in a certain font. 
     """
 
-    def __init__(self,surface,text,rect,**kwargs):
-        self.text   = text
-        self.align  = 'left'
-        self.valign = 'top'
-        self.can_focus = 0
-        # parse label specific arguments
-        for key in kwargs.keys():
-            if key == 'align':
-                self.align = kwargs[key]
-            elif key == 'valign':
-                self.valign = kwargs[key]
+    def __init__ (self, font, text, position = (0,0), callbacks = None,
+                  color = (255,255,255), background = (0,0,0), background_image = None):
+        """Initializes the widget. Renders the font using the passed data."""
 
-        Object.__init__(self,surface,rect,**kwargs)
+        # firts call superclass constructor
+        Widget.__init__ (self, position, callbacks)
 
-    def setText(self,text):
-        """ Sets new text and updates label """
+        # create the surface
+        self.surface = font.render ( text, 1, color )
+
+        # store the needed data so that we can set the text later
+        self.font = font
+        self.color = color
+        self.background = background
+	self.background_img = background_image
+
+        # store our text too
         self.text = text
-        self.draw()
 
-    def showText(self):
-        """
-        Display label text (multiline support)
-        """
-        if len(self.text.split()) == 0: return
 
-        bw,bh = self.rect.size
-        text = self.text
-        lines = []
+    def setText (self, text):
+        """Sets a new text for the label. Renders the new label using the font and colors passed in
+        the constrctor."""
 
-        # some magic to divide the text into several lines
-        while text:
-            words = text.split(' ')
-            for i in range(len(words)):
-                str = string.join(words[:i])
-                if '\n' in str:
-                    str = str[:str.index('\n')]
-                    if self.font.size(str)[0] > bw:
-                        i = i -1
-                    else:
-                        # enforce newline
-                        index = text.index('\n')
-                        i = len( text[:index].split(' ') )
-                        text = text[:index]+' '+text[index+1:]
-                        words = text.split(' ')
-                    break
-                    
-                if self.font.size(str)[0] > bw:
-                    i = i-1
-                    break
-            if i == len(words)-1 or i == 0:
-                lines.append(string.join(words))
-                text = []
-            elif i != 0:
-                lines.append(string.join(words[:i]))
-                text = string.join(words[i:])                
 
-        count = 0
-        if self.valign == 'bottom':
-            lines.reverse()
 
-        # now draw lines according to alignment options
-        for line in lines:
-            if line == '':
-                count += 1
-                continue
-            tmp = self.font.render(line,0,self.color)
-            x = self.rect[0]
-            if self.align == 'right':
-                x = self.rect[0] + self.rect[2] - tmp.get_width()
-            elif self.align == 'center':
-                x = self.rect[0] + (self.rect[2]-tmp.get_width())/2
+        # create the surface
+	try:
+		textsurface = self.font.render( text, 1, self.color )
+		self.surface = textsurface
+		if self.background_img:
+			self.surface.blit(self.background_img,(0,0))
 
-            y = self.rect[1] + count*self.font.get_height()
-            if self.valign == 'bottom':
-                y = self.rect[1]+self.rect[3] - (count+1)*self.font.get_height()
-            elif self.valign == 'center':
-                y = self.rect[1] + self.rect[3]/2 - self.font.get_height() \
-                    * ( len(lines)/2. - count)
+		# store the new text
+		self.text = text
 
-            self.surface.blit(tmp,(x,y))
-            count += 1
-                
-        
-    def draw(self):
-        """
-        draw the widget!
-        """
-        self.surface.set_clip(self.rect)
-        if hasattr(self,'background'):
-            self.surface.blit(self.background,(self.rect[0],self.rect[1]))
+		# we're dirty now
+		self.dirty = 1
+	except:
+		return
 
-	""" Commented out by Jeroen Vloothuis, so that there wont be a black box
-	else:
-            self.surface.subsurface(self.rect).fill(self.bgcolor)
-        if hasattr(self,'rectcolor'):
-            pygame.draw.rect(self.surface,self.rectcolor,
-                             (self.rect[0],self.rect[1],self.rect[2]-1,self.rect[3]-1),1)
-        self.showText()
-	"""
-        pygame.display.update(self.rect)
-        self.surface.set_clip()
+    def getText (self):
+        """Returns the current text of the label."""
+        return self.text
+
+
+
+#  Local Variables:
+#  mode: auto-fill
+#  fill-column: 100
+#  End:

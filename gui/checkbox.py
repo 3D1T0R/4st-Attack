@@ -1,51 +1,115 @@
-import pygame.draw
+###############################################################################################
+# $Id: checkbox.py,v 1.1.1.1 2002/02/19 10:15:59 slmm Exp $
+###############################################################################################
 
-from label import *
+from widget import Widget
+import widget
+import pygame
+from pygame.locals import *
 
-class Checkbox(Label):
+# needed for resetting the background
+import copy
+
+class CheckBox(Widget):
     """
-    Checkbox class
+    This class defines a checkbox which can be in a checked or unchecked state. The two needed
+    images will be loaded by the constructor from the passed filenames.
+
+    This class plays a small sound when the checkbox is toggled.
     """
 
-    def __init__(self,surface,text,rect,**kwargs):
-        self.checked      = 0
-        self.pushed_color = 128,128,128
+    def __init__ (self, image_checked, image_unchecked, position = (0,0), checked = 0,
+                  callbacks = None):
+        """Initializes the widget. Loads the icons from the passed filenamea."""
 
-        # parse arguments for checkbox specific entries
-        for key in kwargs.keys():
-            if key == 'checked':
-                self.checked = kwargs[key]
+        # firts call superclass constructor
+        Widget.__init__ (self, position, callbacks)
+
+        # load the icons
+        self.checked   = image_checked 
+        self.unchecked = image_unchecked 
         
-        Label.__init__(self,surface,text,rect,**kwargs)
+        # store the default state
+        self.state = checked
 
-    def click(self):
-        self.checked = not self.checked
-        Label.click(self)
-        self.draw()
+        # set the surface too, so that isInside() has something to check
+        self.surface = self.checked
 
-    def draw(self):
-        self.surface.set_clip(self.rect)
+        # set our internal callbacks so that we can trap changes
+        self.internal = {widget.MOUSEBUTTONUP : self.toggle }
 
-        if hasattr(self,'background'):
-            self.surface.blit(self.background,(self.rect[0],self.rect[1]))
+	# set the original background to none, is used in the paint method
+	self.original_background = None
+ 
+
+    def isChecked (self):
+        """Returns 1 if the checkbox is checked and 0 if it is not checked."""
+        return self.state
+
+
+    def setChecked (self, checked = 1):
+        """Sets the checkbox as unchecked if the parameter is 0, and to checked for all other
+        values. """
+        if checked == 0:
+            self.state = 0
         else:
-            self.surface.subsurface(self.rect).fill(self.bgcolor)
-        if hasattr(self,'rectcolor'):
-            pygame.draw.rect(self.surface,self.rectcolor,
-                             (self.rect[0],self.rect[1],self.rect[2]-1,self.rect[3]-1),1)
+            self.state = 1
+
+        # we're dirty now
+        self.dirty = 1
+
+
+    def toggle (self, event):
+        """Toggles the state of a checkbox."""
+        if self.state == 0:
+            self.state = 1
+        else:
+            self.state = 0
+
+        # play a sound
+        #audio.playSample ( self.sound_toggled )
+
+        # we're dirty now
+        self.dirty = 1
         
-        tmp = self.rect
-        self.rect = pygame.Rect(tmp[0]+15,tmp[1],tmp[2]-15,tmp[3])
-        self.showText()
-        self.rect = tmp
 
-        # draw checkbox
-        y = tmp[1]+tmp[3]/2
-        self.surface.subsurface( (tmp[0]+2, y-5, 10, 10)).fill((255,255,255))
+    def paint (self, destination, force=0):
+        """Method that paints the editfield. This method will simply blit out the surface of the widget
+        onto the destination surface. """
 
-        if self.checked:
-            pygame.draw.lines(self.surface, (0,0,0), 0,
-                              ( (tmp[0]+3,y), (tmp[0]+5,y+4), (tmp[0]+11,y-4) ),2)
+        if self.original_background is None:
+		self.original_background = pygame.Surface(self.checked.get_size())
+	        self.original_background.blit(destination.subsurface(
+				self.position,
+				(self.position[0]+self.checked.get_width(), self.position[1]+self.checked.get_height())
+			), (0,0)
+		)
+	
+	destination.blit ( self.original_background, (self.position [0], self.position [1] ) )
 
-        self.surface.set_clip()
-        pygame.display.update(self.rect)
+	
+        # are we dirty or not?
+        if not self.dirty and not force:
+            # not dirty, nothing to do here
+            return 0
+
+        # what surface should we use?
+        if self.state:
+            usedsurface = self.checked
+        else:
+            usedsurface = self.unchecked
+        
+        # we're dirty, blit out the button
+        destination.blit ( usedsurface, (self.position [0], self.position [1] ) )
+             
+        self.dirty = 0
+        
+        # we did something, make sure the widget manager knows that
+        return 1
+
+   
+    
+#  Local Variables:
+#  mode: auto-fill
+#  fill-column: 100
+#  End:

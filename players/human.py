@@ -1,51 +1,40 @@
-from player import * 
+from player import *
 import gui
 import pygame, pygame.font, pygame.image, pygame.mixer, pygame.transform
 from pygame.locals import *
 import rules
+from gui.dialog import *
 
-class Human(Player):
+class Human(Dialog):
 	type = 'human'
 
-	def __init__(self, screen, images, settings, difficulty):
-		self.screen = screen
+	def __init__(self, surface, images, locations, difficulty):
 		self.images = images
-		self.settings = settings
-	
+		self.locations = locations
+		Dialog.__init__ (self, surface)
+
+	def createWidgets(self):
+		for number in range(7):
+			self.wm.register(Button(self.images['human']['column'+ str(number)], self.images['human']['column'+ str(number)],
+	                        (int(self.locations['game']['column'+ str(number) +'_x']),
+	                        int(self.locations['game']['column'+ str(number) +'_y'])),
+	                        callbacks={widget.MOUSEBUTTONUP : self.setmove }, args=number
+	                ))
+
 	# This method returns the move to be made
-	def doMove(self, board, player):
+	def doMove(self, board, player, event):
+		self.move = -1
+		self.board = board
 		# Reset the move to an illegal one
 		self.move = -1
-		self.display()
+		self.handleEvent(event)
+		if self.move >-1 and self.move < 7:
+			return self.move
+		return -1
 
-		while 1:
-                        list=[]
-                        list.append(pygame.event.wait())
-                        self.handler.update(list)
-			if rules.isMoveLegal(board, self.move):
-				return self.move
-		
-	def display(self):
-	        self.handler = gui.Handler()
-	        self.image = self.screen
-                # The game buttons, for selecting a column
-                for number in range(7):
-	                self.dropButton(self.handler, self.image, number)
-
-
-
-	def dropButton(self, handler, image, number):
-                # The game button, for selecting a column
-		button = gui.IndexedButton( image, '',
-        		(int(self.settings.getLocations()['gamescreen']['column'+ str(number) +'_x']),
-                	int(self.settings.getLocations()['gamescreen']['column'+ str(number) +'_y']),
-	                self.images['b_column'+str(number)].get_width(), self.images['b_column'+str(number)].get_height()),
-        	        background=self.images['b_column'+str(number)],
-                	align='center', valign='center',
-			onClick=self.setmove)
-		button.index = number
-		self.handler.add(button)
-	
-	def setmove(self,  event):
-		self.move = event.index
-		print self.move
+	def setmove(self, trigger, event, number):
+		if rules.isMoveLegal(self.board, number):
+			self.move = number
+			return widget.DONE
+	def gameOver(self, move):
+		return None

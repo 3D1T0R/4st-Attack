@@ -6,6 +6,7 @@ class Board:
 		self.state = []
         	for x in range(7):
 			self.state.append([])
+		self.last_move = -1
 	
 	def move(self, move, player):
 		self.state[move].append(player)

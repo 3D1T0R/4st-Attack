@@ -88,7 +88,7 @@ class MinMax(Player):
 		return node
 		
 
-	def doMove(self, current_board, player):
+	def doMove(self, current_board, player, event):
 		board = copy.deepcopy(current_board)
 
 		if player == 1: opponent = 2
@@ -113,3 +113,6 @@ class MinMax(Player):
 					bestscore = child.value
 					best_moves = [child.move]
 		return best_moves[int(random()*len(best_moves))]
+
+	def gameOver(self, move):
+		return None

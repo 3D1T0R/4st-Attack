@@ -6,6 +6,7 @@ The players of the game
 from player   import *
 from human    import *
 from minmax   import *
+from multiplayer import *
 from strategic import *
 #from agressive import *
 from weighted import *

@@ -1,57 +1,67 @@
-import pygame.transform
+###############################################################################################
+# $Id: button.py,v 1.1.1.1 2002/02/19 10:16:00 slmm Exp $
+###############################################################################################
 
-from label import Label
+from widget import Widget
+import widget
+import pygame
+import pygame.image
+import pygame.mixer
+from pygame.locals import *
 
-class Button(Label):
+class Button(Widget):
     """
-    Class for two-state buttons
+    This class defines a simple pushbutton which can can be clicked. It needs a surfaces that
+    represent the button. The surface will be loaded by the constructor from a passed filename.
+
+    This class plays a small sound when the button is clicked.
     """
 
-    def __init__(self,surface,text,rect,**kwargs):
-        self.pushed_color = 0,0,0
-        self.state = 0
+    # define a shared cache
+    cache = {}
+
+    def __init__ (self, button_image, button_image_pressed, position = (0,0), callbacks = None, sound_clicked = None, args = None):
+        """Initializes the widget. Loads the icons from the passed filename."""
+
+        # firts call superclass constructor
+        Widget.__init__ (self, position, callbacks, args)
+
+        self.surface_released = button_image 
+            
+        self.surface_pressed = button_image_pressed          
+
+        # initial surface is the non-pressed one
+        self.surface = self.surface_released
+ 
+        # set our internal callbacks so that we can trap keys
+        self.internal = {widget.MOUSEBUTTONUP   : self.mouseUp,
+                         widget.MOUSEBUTTONDOWN : self.mouseDown }
+
+
+    def mouseUp (self, event):
+        """Internal callback triggered when the mouse is released when it is over a button. This
+        sets a new icon for the button."""
+        # set the new icon
+        self.surface = self.surface_released
+
+        # play a sound
+        #audio.playSample ( self.sound_clicked )
         
-        # parse button specific arguments
-        for key in kwargs.keys():
-            if key == 'pushed_color':
-                self.pushed_color = kwargs[key]
-            elif key == 'pushed_background':
-                tmp = kwargs[key]
-                if tmp.get_size() == (rect[2],rect[3]):
-                    self.pushed_background = tmp
-                else:
-                    self.pushed_background = pygame.transform.scale(tmp,(rect[2],rect[3]))
-        Label.__init__(self,surface,text,rect,**kwargs)
-        if self.pushed_color == (0,0,0):
-            self.pushed_color = self.bgcolor
+        # we're dirty
+        self.dirty = 1
+
+
+    def mouseDown (self, event):
+        """Internal callback triggered when the mouse is pressed when it is over a button. This
+        sets a new icon for the button."""
+        # set the new icon
+        self.surface = self.surface_pressed
+
+        # we're dirty
+        self.dirty = 1
 
         
-    def mouseButtonDown(self):
-        self.state = 1
-        self.draw()
-
-    def mouseButtonUp(self):
-        self.state = 0
-        self.draw()
-
-    def draw(self):
-        tmp_bg = None
-        if self.state:
-            tmp = self.bgcolor
-            self.bgcolor = self.pushed_color
-            if hasattr(self,'pushed_background'):
-                if hasattr(self,'background'):
-                    tmp_bg = self.background
-                else:
-                    tmp_bg = None
-                self.background = self.pushed_background
-        
-        Label.draw(self)
-
-        if self.state:
-            self.bgcolor = tmp
-            if tmp_bg != None:
-                self.background = tmp_bg
-            else:
-                if hasattr(self,'background'):
-                    del self.background
+#  Local Variables:
+#  mode: auto-fill
+#  fill-column: 100
+#  End:
