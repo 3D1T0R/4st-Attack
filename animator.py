@@ -80,7 +80,7 @@ class AnimatedTurnObject:
 	def getSurface(self, time):
 		offset = (time-self.delay)
 
-		return pygame.transform.scale(self.image, (math.sin(self.delta*offset)*self.image.get_width(), self.image.get_height()))
+		return pygame.transform.scale(self.image, (int(math.sin(self.delta*offset)*self.image.get_width()), self.image.get_height()))
 
 
 	def visable(self, time):
