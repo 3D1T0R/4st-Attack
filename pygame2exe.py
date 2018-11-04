@@ -54,7 +54,7 @@ class BuildExe:
         self.project_url = "http://forcedattack.sf.net/"
 
         #Version of program
-        self.project_version = "0.0"
+        self.project_version = "2.0"
 
         #License of the program
         self.license = "GPL"
