@@ -40,10 +40,10 @@ class IniSettings:
 		for group in self.settings.keys():
 			inifile.write("\n["+group+"]\n")
 			for key in self.settings[group].keys():
-				inifile.write(key+"="+self.settings[group][key]+"\n")
+				inifile.write(str(key)+"="+str(self.settings[group][key])+"\n")
 	
 	# Set a single value, requires a valid group and key
-	def set(group, key, value):
+	def set(self, group, key, value):
 		self.settings[group][key] = value
 	
 	# Set a complete dict of values, it doesnt delete groups, keys and values which are not

@@ -10,9 +10,67 @@ def isBoardFull(board):
 			return 0 
 	return 1
 
+def isWinner(board, player):
+        if _isVerticalWin(board, player):
+                return 4
+        if _isHorizontalWin(board, player):
+                return 4
+        if _isDiagonalWin(board, player):
+                return 4
+        return 0
+
+
+def _isVerticalWin(board, player):
+        x = board.last_move
+        four_in_a_row = [player, player, player, player]
+        return board.state[x][-4:] == four_in_a_row
+
+
+def _isHorizontalWin(board, player):
+        x = board.last_move
+        y = len(board.state[x]) - 1
+        four_in_a_row = str(player) * 4
+        row = []
+        for i in range(-3, 4):
+                try:
+                        if x+i < 0: continue
+                        row.append(str(board.state[x+i][y]))
+                except IndexError:
+                        row.append('s')  # 's' stands for sentinel
+        return ''.join(row).find(four_in_a_row) >= 0
+
+
+def _isDiagonalWin(board, player):
+        x = board.last_move
+        y = len(board.state[x]) - 1
+        four_in_a_row = str(player) * 4
+        row = []
+        for i in range(-3, 4):
+                try:
+                        if x+i < 0: continue
+                        if y+i < 0: continue
+                        row.append(str(board.state[x+i][y+i]))
+                except IndexError:
+                        row.append('s')  # 's' stands for sentinel
+        if ''.join(row).find(four_in_a_row) >= 0:
+                return 1
+        row = []
+        for i in range(-3, 4):
+                try:
+                        if x+i < 0: continue
+                        if y-i < 0: continue
+                        row.append(str(board.state[x+i][y-i]))
+                except IndexError:
+                        row.append('s')  # 's' stands for sentinel
+        if ''.join(row).find(four_in_a_row) >= 0:
+                return 1
+        return 0
+
+"""
+
 # Checks if theres a winner
 def isWinner(board, player):
-	
+
 	# Check vertical wins
 	for x in range(7):
 		sequence = 0
@@ -68,3 +126,4 @@ def isWinner(board, player):
 				else: sequence = 0
 	# No win for player
 	return 0
+"""
