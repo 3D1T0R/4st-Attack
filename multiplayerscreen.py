@@ -31,7 +31,7 @@ class MultiplayerScreen(Dialog):
 		))
 
 
-		self.host = EditField( pygame.font.Font(None, 24), text = "localhost", width = int(self.locations['multiplayerscreen']['textfield_size']), position = (
+		self.host = EditField( pygame.font.Font("technical.ttf", 24), text = "localhost", width = int(self.locations['multiplayerscreen']['textfield_size']), position = (
 			int(self.locations['multiplayerscreen']['textfield_x']),
 			int(self.locations['multiplayerscreen']['textfield_y'])
 		),
@@ -68,9 +68,9 @@ class MultiplayerScreen(Dialog):
 						
 		#chat = Chat(self.surface, self.images, self.locations)
 		chat = None
-		
-		from game import *
-		
+
+ 		from game import *
+
                 game = Game(self.surface, self.images, self.locations, player1, player2)
                 game.run()
 
@@ -94,7 +94,7 @@ class MultiplayerScreen(Dialog):
 
 		#chat = Chat(self.surface, self.images, self.locations, self.host.getText())
 		chat = None
-		
+
 		from game import *
 
                 game = Game(self.surface, self.images, self.locations, player1, player2)
