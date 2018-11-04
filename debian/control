@@ -1,0 +1,11 @@
+Source: forcedattack2
+Section: unknown
+Priority: optional
+Maintainer: Xander Soldaat <xander@soldaat.com>
+Standards-Version: 3.2.1
+
+Package: forcedattack2
+Architecture: any
+Depends: ${shlibs:Depends}, python, pygame
+Description: Addictive connect-four game
+ 4st Attack is a gorgeous looking connect-four. And whilst being good looking it's scarily addictive!

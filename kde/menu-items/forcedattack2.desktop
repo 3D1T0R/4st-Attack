@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=4stAttack2
+Name[eo]=4stAttack2
+Name[xx]=xx
+Icon=forcedattack2
+Type=Application
+Exec=/usr/games/4stattack 
+GenericName=Strategy Game

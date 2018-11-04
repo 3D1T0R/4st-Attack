@@ -1,0 +1,4 @@
+Makefile
+*.pyc
+snapshot.jpg
+snapshot.bmp
