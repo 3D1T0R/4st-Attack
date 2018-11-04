@@ -71,7 +71,7 @@ class BuildExe:
         self.icon_file = 'appicon.ico'
 
         #Extra files/dirs copied to game
-        self.extra_datas = ['settings.ini', 'data']
+        self.extra_datas = ['settings.ini', 'data', 'technical.ttf']
 
         #Extra/excludes python modules
         self.extra_modules = []
